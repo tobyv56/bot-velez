@@ -207,45 +207,6 @@ async def responder_whatsapp(Body: str = Form(...)):
         media_type="application/xml"
     )
 
-try:
-    db_pool = psycopg2.pool.SimpleConnectionPool(
-        1, 20,
-        os.environ.get('DATABASE_URL'),
-        sslmode='require'
-    )
-    print("Pool de conexiones creado con éxito")
-except Exception as e:
-    print(f"Error creando el pool: {e}")
-
-def ejecutar_query(query, params=None, es_consulta=True):
-    conn = None
-    try:
-        # Esto asegura que CADA VEZ que alguien mande un mensaje, 
-        # se intente una conexión nueva y fresca
-            conn = psycopg2.connect(os.environ.get('DATABASE_URL'), sslmode='require')
-            cur = conn.cursor(cursor_factory=RealDictCursor)
-        
-            cur.execute(query, params)
-        
-            if es_consulta:
-                resultado = cur.fetchone()
-            else:
-                conn.commit() # Para INSERT o UPDATE
-                resultado = True
-            
-            cur.close()
-            return resultado
-    except Exception as e:
-            print(f"Error en la base de datos: {e}")
-            return None
-    finally:
-            if conn:
-                conn.close() # Cerramos siempre para evitar el error de "closed"
-
-def get_connection():
-    # Esto intentará conectar de nuevo si la conexión se perdió
-    return psycopg2.connect(os.environ.get('DATABASE_URL'), sslmode='require')
-
 
 
 
