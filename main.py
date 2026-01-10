@@ -92,7 +92,7 @@ async def responder_whatsapp(Body: str = Form(...)):
                 LIMIT 1
                 """
             
-                cursor.execute(query_producto, (codigo,))
+                cursor.execute(query_producto, (codigo_barra,))
                 producto = cursor.fetchone()
 
                 if producto:
@@ -231,6 +231,7 @@ def ejecutar_consulta(query):
     finally:
         if conn:
             db_pool.putconn(conn) # Devuelve la conexión al pool
+
 
 
 
