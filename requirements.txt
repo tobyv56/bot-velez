@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+psycopg2-binary
+schedule
+twilio
+python-multipart
