@@ -12,6 +12,7 @@ client = Client(TWILIO_SID, TWILIO_TOKEN)
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
+conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
 
 cursor = conn.cursor()
 
@@ -60,3 +61,4 @@ while True:
     schedule.run_pending()
 
     time.sleep(1)
+
