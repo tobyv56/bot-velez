@@ -17,6 +17,10 @@ class Product(BaseModel):
     marca : Optional[str] = None
     stock : Optional[int] = None
 
+@app.get("/")
+async def home():
+    return {"mensaje": "El bot está encendido y escuchando"}
+    
 @app.post("/webhook")
 async def responder_whatsapp(Body: str = Form(...)):
     
@@ -157,5 +161,6 @@ async def responder_whatsapp(Body: str = Form(...)):
 
     resp_twilio.message(respuesta)
     return Response(content=str(resp_twilio), media_type="application/xml")
+
 
 
