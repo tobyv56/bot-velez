@@ -208,8 +208,8 @@ async def responder_whatsapp(Body: str = Form(...)):
     )
 
 try:
-        db_pool = psycopg2.pool.SimpleConnectionPool(
-                    1, 20,
+    db_pool = psycopg2.pool.SimpleConnectionPool(
+        1, 20,
         os.environ.get('DATABASE_URL'),
         sslmode='require'
     )
@@ -245,6 +245,7 @@ def ejecutar_query(query, params=None, es_consulta=True):
 def get_connection():
     # Esto intentará conectar de nuevo si la conexión se perdió
     return psycopg2.connect(os.environ.get('DATABASE_URL'), sslmode='require')
+
 
 
 
