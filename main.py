@@ -93,14 +93,20 @@ async def responder_whatsapp(Body: str = Form(...)):
                     respuesta = "❌ Producto no encontrado"
 
         elif comando == "!nuevo":
-            texto_datos = mensaje.replace("!nuevo", "").strip()
-            lista_datos = [p.strip() for p in texto_datos.split(",") if p.strip()]
+        texto_datos = mensaje.replace("!nuevo", "").strip()
+        lista_datos = [p.strip() for p in texto_datos.split(",") if p.strip()]
 
-            if len(lista_datos) < 6:
-                respuesta = "❌ Formato incorrecto. Usá: !nuevo nombre,precio,fecha,stock,marca,codigo"
-            else:
+        if len(lista_datos) < 6:
+            respuesta = "❌ Formato incorrecto. Usá: !nuevo nombre, precio, fecha, stock, marca, codigo"
+        else:
+            try:
+                # Usamos variables temporales para validar antes de insertar
                 nombre_p = lista_datos[0]
-                precio = float(lista_datos[1])
+                
+                # Limpiamos el precio por si pusiste un $
+                precio_raw = lista_datos[1].replace("$", "").strip()
+                precio = float(precio_raw)
+                
                 fecha_v = lista_datos[2]
                 stock = int(lista_datos[3])
                 marca = lista_datos[4]
@@ -114,6 +120,12 @@ async def responder_whatsapp(Body: str = Form(...)):
                 conn.commit() 
                 respuesta = f"✅ Producto '{nombre_p}' creado con éxito."
 
+            except ValueError:
+                respuesta = "❌ Error: El precio y el stock deben ser números (sin letras ni símbolos)."
+            except Exception as e:
+                if 'conn' in locals(): conn.rollback()
+                print(f"Error detallado: {e}")
+                respuesta = f"❌ Error al guardar: Asegurate que la fecha sea AAAA-MM-DD."
         elif comando == "!actualizar":
             datos = mensaje.replace("!actualizar", "").strip()
             lista_datos = [p.strip() for p in datos.split(",") if p.strip()]
@@ -161,6 +173,7 @@ async def responder_whatsapp(Body: str = Form(...)):
 
     resp_twilio.message(respuesta)
     return Response(content=str(resp_twilio), media_type="application/xml")
+
 
 
 
