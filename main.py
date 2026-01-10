@@ -81,17 +81,17 @@ async def responder_whatsapp(Body: str = Form(...)):
 
         conn.rollback()
         
-        if len(codigo_barra) != 11 and not codigo_barra.isdigit():
+        if len(codigo) != 11 and not codigo.isdigit():
                 respuesta = "codigo de barra incorrecto...."
         else:
                 query_producto = """
                 SELECT nombre_producto, stock, precio, fecha_vencimiento, marca
                 FROM producto
-                WHERE codigo_barra = %s
+                WHERE codigo = %s
                 LIMIT 1
                 """
             
-                cursor.execute(query_producto, (codigo_barra,))
+                cursor.execute(query_producto, (codigo,))
                 producto = cursor.fetchone()
 
                 if producto:
@@ -125,7 +125,7 @@ async def responder_whatsapp(Body: str = Form(...)):
 
                 insercion_producto = """
                 INSERT INTO producto
-                (nombre_producto, precio, fecha, stock, marca,codigo_barra)
+                (nombre_producto, precio, fecha_vencimiento, stock, marca,codigo)
                 VALUES (%s, %s, %s, %s, %s,%s)
                 """
                 cursor.execute(
@@ -205,5 +205,6 @@ async def responder_whatsapp(Body: str = Form(...)):
         content=str(resp_twilio),
         media_type="application/xml"
     )
+
 
 
