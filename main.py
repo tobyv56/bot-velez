@@ -138,7 +138,7 @@ async def responder_whatsapp(Body: str = Form(...)):
         elif comando == "!":
             respuesta = (
                 "🤖 *Comandos Disponibles:*\n"
-                "• !producto [nombre],[marca]\n"
+                "• !producto [nombre]\n"
                 "• !productoc [codigo]\n"
                 "• !nuevo [nom,pre,fec,stk,mar,cod]\n"
                 "• !actualizar [nom,mar,campo,valor]"
@@ -157,4 +157,5 @@ async def responder_whatsapp(Body: str = Form(...)):
 
     resp_twilio.message(respuesta)
     return Response(content=str(resp_twilio), media_type="application/xml")
+
 
