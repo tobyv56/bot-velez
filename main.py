@@ -232,6 +232,9 @@ def ejecutar_consulta(query):
         if conn:
             db_pool.putconn(conn) # Devuelve la conexión al pool
 
+def get_connection():
+    # Esto intentará conectar de nuevo si la conexión se perdió
+    return psycopg2.connect(os.environ.get('DATABASE_URL'), sslmode='require')
 
 
 
