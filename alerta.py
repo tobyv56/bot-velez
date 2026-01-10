@@ -4,61 +4,70 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from twilio.rest import Client
 import os
+import requests
+
 
 TWILIO_SID = os.environ.get('TWILIO_SID')
 TWILIO_TOKEN = os.environ.get('TWILIO_TOKEN')
+DATABASE_URL = os.environ.get('DATABASE_URL')
+RENDER_URL = "https://tu-bot.onrender.com/" 
 
 client = Client(TWILIO_SID, TWILIO_TOKEN)
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
-
-conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
-
-cursor = conn.cursor()
-
 def revision_vencimiento():
-    
-    query_fecha_venc = """SELECT nombre_producto,fecha_vencimiento FROM producto
-                     WHERE 
-                     fecha_vencimiento BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '62 days'
-                     AND 
-                     fecha_vencimiento >= CURRENT_DATE"""
-    cursor.execute(query_fecha_venc)
-    query_fecha = cursor.fetchall()
+    print("⏰ Iniciando revisión de vencimientos...")
+    try:
+        conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+        cursor = conn.cursor()
 
-    productos_por_vencer = []
+        query_fecha_venc = """
+            SELECT nombre_producto, fecha_vencimiento 
+            FROM producto
+            WHERE fecha_vencimiento BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '62 days'
+            AND fecha_vencimiento >= CURRENT_DATE
+        """
+        cursor.execute(query_fecha_venc)
+        query_fecha = cursor.fetchall()
 
-    for producto in query_fecha:
-        print(f"   -> Procesando: {producto['nombre_producto']}")
-        nombre_producto = producto['nombre_producto']
-        fecha_producto = producto['fecha_vencimiento']
+        productos_por_vencer = []
+        for producto in query_fecha:
+            texto = f"• {producto['nombre_producto']} vence el {producto['fecha_vencimiento']}"
+            productos_por_vencer.append(texto)
 
-        texto = f"el producto {nombre_producto} vence el {fecha_producto}"
+        
+        cursor.close()
+        conn.close()
 
-        productos_por_vencer.append(texto)
+        if productos_por_vencer:
+            print(f"📦 Se encontraron {len(productos_por_vencer)} productos. Enviando WhatsApp...")
+            respuesta_final = "📢 *Reporte de Vencimientos:*\n\n" + "\n".join(productos_por_vencer)
 
-    cursor.close()
-    conn.close()
-
-    if len(productos_por_vencer) > 0:
-        print(f"3. Intentando enviar {len(productos_por_vencer)} productos a Twilio...")
-        respuesta = "reporte diario de los productos por vencer"
-        cuerpo = "\n".join(productos_por_vencer) 
-        respuesta_final = respuesta + cuerpo
-
-        try:
-            message = client.messages.create(
+            client.messages.create(
                 from_='whatsapp:+14155238886',  
-                body= respuesta_final,
+                body=respuesta_final,
                 to='whatsapp:+5491158878312'   
             )
-        except Exception as e:
-            print(f"❌ Error al enviar WhatsApp: {e}")
-            
+        else:
+            print("✅ No hay productos por vencer hoy.")
+
+    except Exception as e:
+        print(f"❌ Error en revision_vencimiento: {e}")
+
+def mantener_vivo():
+    try:
+        r = requests.get(RENDER_URL)
+        print(f"📡 Keep-alive exitoso (Status: {r.status_code})")
+    except Exception as e:
+        print(f"❌ Falló el keep-alive: {e}")
+
 schedule.every().day.at("10:00").do(revision_vencimiento)
+
+schedule.every(10).minutes.do(mantener_vivo)
+
+print("🚀 Script de alertas y keep-alive iniciado...")
+
+mantener_vivo()
 
 while True:
     schedule.run_pending()
-
-    time.sleep(1)
-
+    time.sleep(60) 
