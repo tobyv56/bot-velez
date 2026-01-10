@@ -5,6 +5,7 @@ from psycopg2.extras import RealDictCursor
 from typing import Optional
 from twilio.twiml.messaging_response import MessagingResponse
 import os
+from psycopg2 import pool
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
@@ -205,6 +206,31 @@ async def responder_whatsapp(Body: str = Form(...)):
         content=str(resp_twilio),
         media_type="application/xml"
     )
+
+    try:
+    db_pool = psycopg2.pool.SimpleConnectionPool(
+        1, 20,
+        os.environ.get('DATABASE_URL'),
+        sslmode='require'
+    )
+    print("Pool de conexiones creado con éxito")
+except Exception as e:
+    print(f"Error creando el pool: {e}")
+
+# Para usar la base de datos en tus funciones:
+def ejecutar_consulta(query):
+    conn = None
+    try:
+        conn = db_pool.getconn() # Pide una conexión viva
+        cur = conn.cursor()
+        cur.execute(query)
+        # ... tu lógica ...
+        conn.commit()
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        if conn:
+            db_pool.putconn(conn) # Devuelve la conexión al pool
 
 
 
