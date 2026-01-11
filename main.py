@@ -73,7 +73,7 @@ async def responder_whatsapp(Body: str = Form(...)):
             if not codigo_barra:
                 respuesta = "⚠️ Ingresá el código de barras después del comando."
             else:
-                query_producto = "SELECT * FROM producto WHERE codigo_barra = %s LIMIT 1"
+                query_producto = "SELECT * FROM producto WHERE codigo = %s LIMIT 1"
                 cursor.execute(query_producto, (codigo_barra,))
                 producto = cursor.fetchone()
 
@@ -151,6 +151,7 @@ async def responder_whatsapp(Body: str = Form(...)):
 
     resp_twilio.message(respuesta)
     return Response(content=str(resp_twilio), media_type="application/xml")
+
 
 
 
