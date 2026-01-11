@@ -66,7 +66,7 @@ async def responder_whatsapp(Body: str = Form(...)):
                         f"🏷️ *Marca:* {producto['marca']}\n"
                         f"💰 *Precio:* ${producto['precio']}\n"
                         f"🛒 *Stock:* {producto['stock']} unidades\n"
-                        f"🔄 *fecha_vencimiento {producto['fecha_venimiento']}\n"
+                        f"🔄 *fecha_vencimiento {producto['fecha_vencimiento']}\n"
                     )
                 else:
                     respuesta = f"❌ No encontré nada que tenga: *{consulta_limpia}*"
@@ -102,7 +102,8 @@ async def responder_whatsapp(Body: str = Form(...)):
                         f"🔹*Nombre:* {producto['nombre_producto']}\n"
                         f"🏷️ *Marca:* {producto['marca']}\n"
                         f"💰 *Precio:* ${producto['precio']}\n"
-                        f"🛒 *Stock:* {producto['stock']} unidades"
+                        f"🛒 *Stock:* {producto['stock']} unidades\n"
+                        f"🔄 *fecha_vencimiento {producto['fecha_vencimiento']}\n"
                     )
                 else:
                     respuesta = "❌ Producto no encontrado"
@@ -209,6 +210,7 @@ async def responder_whatsapp(Body: str = Form(...)):
         content=str(resp_twilio),
         media_type="application/xml"
     )
+
 
 
 
