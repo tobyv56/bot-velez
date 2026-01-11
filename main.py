@@ -84,6 +84,7 @@ async def responder_whatsapp(Body: str = Form(...)):
         if len(codigo_barra) != 11 and not codigo_barra.isdigit():
                 respuesta = "codigo de barra incorrecto...."
         else:
+            try:  
                 query_producto = """
                 SELECT nombre_producto, stock, precio, fecha_vencimiento, marca
                 FROM producto
@@ -104,6 +105,9 @@ async def responder_whatsapp(Body: str = Form(...)):
                     )
                 else:
                     respuesta = "❌ Producto no encontrado"
+            except:
+                respuesta = "ocurrio un error en el codigo...."
+
 
     elif comando == "!nuevo":
         texto_datos = mensaje.replace("!nuevo", "").strip()
@@ -204,6 +208,7 @@ async def responder_whatsapp(Body: str = Form(...)):
         content=str(resp_twilio),
         media_type="application/xml"
     )
+
 
 
 
