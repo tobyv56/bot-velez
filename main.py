@@ -55,14 +55,13 @@ async def responder_whatsapp(Body: str = Form(...)):
 
                 if producto:
                     f_venc = producto['fecha_vencimiento']
-                    f_formateada = f_venc.strftime('%d/%m/%Y') if f_venc else "Sin fecha"
                     respuesta = (
                         "📦 *Detalles del Producto*\n"
                         f"🔹 *Nombre:* {producto['nombre_producto']}\n"
                         f"🏷️ *Marca:* {producto['marca']}\n"
                         f"💰 *Precio:* ${producto['precio']}\n"
                         f"🛒 *Stock:* {producto['stock']} unidades\n"
-                        f"📅 *Vencimiento:* {f_formateada}"
+                        f"📅 *Vencimiento:* {f_venc}"
                     )
                 else:
                     respuesta = f"❌ No encontré nada que coincida con: *{consulta_limpia}*"
@@ -79,14 +78,13 @@ async def responder_whatsapp(Body: str = Form(...)):
 
                 if producto:
                     f_venc = producto['fecha_vencimiento']
-                    f_formateada = f_venc.strftime('%d/%m/%Y') if f_venc else "Sin fecha"
                     respuesta = (
                         "📦 *Detalles del Producto*\n"
                         f"🔹 *Nombre:* {producto['nombre_producto']}\n"
                         f"🏷️ *Marca:* {producto['marca']}\n"
                         f"💰 *Precio:* ${producto['precio']}\n"
                         f"🛒 *Stock:* {producto['stock']} unidades\n"
-                        f"📅 *Vencimiento:* {f_formateada}"
+                        f"📅 *Vencimiento:* {f_venc}"
                     )
                 else:
                     respuesta = "❌ Código no encontrado en la base de datos."
@@ -151,6 +149,7 @@ async def responder_whatsapp(Body: str = Form(...)):
 
     resp_twilio.message(respuesta)
     return Response(content=str(resp_twilio), media_type="application/xml")
+
 
 
 
