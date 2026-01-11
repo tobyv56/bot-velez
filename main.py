@@ -114,7 +114,7 @@ async def responder_whatsapp(Body: str = Form(...)):
                                          %s,  %s,  %s, %s, %s, %s;"""
                     cursor.execute(query_insercion,(nombre_p,precio,fecha_vencimiento,marca,stock,codigo_barra))
                     conn.commit()
-                    respuesta = f¨el producto {nombre_p} fue creado con exito!¨
+                    respuesta = f"el producto {nombre_p} fue creado con exito!"
                     
                 except Exception as e:
                     respuesta = f"❌ Error: {e}"
@@ -164,6 +164,7 @@ async def responder_whatsapp(Body: str = Form(...)):
 
     resp_twilio.message(respuesta)
     return Response(content=str(resp_twilio), media_type="application/xml")
+
 
 
 
