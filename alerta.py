@@ -60,7 +60,7 @@ def mantener_vivo():
     except Exception as e:
         print(f"❌ Falló el keep-alive: {e}")
 
-schedule.every().day.at("10:00").do(revision_vencimiento)
+schedule.every().day.at("7:41").do(revision_vencimiento)
 
 schedule.every(10).minutes.do(mantener_vivo)
 
@@ -71,6 +71,7 @@ mantener_vivo()
 while True:
     schedule.run_pending()
     time.sleep(60) 
+
 
 
 
