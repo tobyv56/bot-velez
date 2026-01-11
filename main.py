@@ -220,9 +220,9 @@ async def responder_whatsapp(Body: str = Form(...)):
 
     if len(productos_por_vencer) > 0:
         print(f"3. Intentando enviar {len(productos_por_vencer)} productos a Twilio...")
-        respuesta = "reporte diario de los productos por vencer"
+        respuesta_a = "reporte diario de los productos por vencer"
         cuerpo = "\n".join(productos_por_vencer) 
-        respuesta_final = respuesta + cuerpo
+        respuesta = respuesta_a + cuerpo
     
     else:
         respuesta = "❓ Comando no reconocido"
@@ -233,6 +233,7 @@ async def responder_whatsapp(Body: str = Form(...)):
         content=str(resp_twilio),
         media_type="application/xml"
     )
+
 
 
 
