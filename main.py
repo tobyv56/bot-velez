@@ -195,35 +195,6 @@ async def responder_whatsapp(Body: str = Form(...)):
                     f"!productoc: codigo_barra\n"
                     f"!nuevo: nombre_producto,precio,fecha_vencimiento,marca,stock,codigo_barra\n"
                     f"!actualizar: nombre_producto,marca,atributo a modificar, por ej: nombre,stock,nuevo valor\n")
-    elif comando == "!vencimiento":
-         query_fecha_venc = """SELECT nombre_producto,fecha_vencimiento FROM producto
-                     WHERE 
-                     fecha_vencimiento BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '62 days'
-                     AND 
-                     fecha_vencimiento >= CURRENT_DATE"""
-    cursor.execute(query_fecha_venc)
-    query_fecha = cursor.fetchall()
-
-    productos_por_vencer = []
-
-    for producto in query_fecha:
-        print(f"   -> Procesando: {producto['nombre_producto']}")
-        nombre_producto = producto['nombre_producto']
-        fecha_producto = producto['fecha_vencimiento']
-
-        texto = f"el producto {nombre_producto} vence el {fecha_producto}"
-
-        productos_por_vencer.append(texto)
-
-    cursor.close()
-    conn.close()
-
-    if len(productos_por_vencer) > 0:
-        print(f"3. Intentando enviar {len(productos_por_vencer)} productos a Twilio...")
-        respuesta_a = "reporte diario de los productos por vencer"
-        cuerpo = "\n".join(productos_por_vencer) 
-        respuesta = respuesta_a + cuerpo
-    
     else:
         respuesta = "❓ Comando no reconocido"
 
@@ -233,6 +204,7 @@ async def responder_whatsapp(Body: str = Form(...)):
         content=str(resp_twilio),
         media_type="application/xml"
     )
+
 
 
 
