@@ -87,7 +87,7 @@ async def responder_whatsapp(Body: str = Form(...)):
                 query_producto = """
                 SELECT nombre_producto, stock, precio, fecha_vencimiento, marca
                 FROM producto
-                WHERE codigo_barra = %s
+                WHERE codigo = %s
                 LIMIT 1
                 """
             
@@ -204,6 +204,7 @@ async def responder_whatsapp(Body: str = Form(...)):
         content=str(resp_twilio),
         media_type="application/xml"
     )
+
 
 
 
