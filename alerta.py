@@ -10,7 +10,7 @@ import requests
 TWILIO_SID = os.environ.get('TWILIO_SID')
 TWILIO_TOKEN = os.environ.get('TWILIO_TOKEN')
 DATABASE_URL = os.environ.get('DATABASE_URL')
-RENDER_URL = "https://tu-bot.onrender.com/" 
+RENDER_URL = "https://bot-velez.onrender.com" 
 
 client = Client(TWILIO_SID, TWILIO_TOKEN)
 
@@ -71,5 +71,6 @@ mantener_vivo()
 while True:
     schedule.run_pending()
     time.sleep(60) 
+
 
 
