@@ -35,7 +35,7 @@ async def responder_whatsapp(Body: str = Form(...)):
 
     if comando == "!producto":
         
-        consulta_limpia = " ".join(partes[1:]).strip()
+        consulta_limpia = " ".join(partes[1:]).replace(",", " ").strip()
 
         if not consulta_limpia:
             respuesta = "❌ ¿Qué buscás? Ej: !producto quilmes lata"
@@ -210,6 +210,7 @@ async def responder_whatsapp(Body: str = Form(...)):
         content=str(resp_twilio),
         media_type="application/xml"
     )
+
 
 
 
