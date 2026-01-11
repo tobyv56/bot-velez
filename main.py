@@ -5,6 +5,7 @@ from psycopg2.extras import RealDictCursor
 from typing import Optional
 from twilio.twiml.messaging_response import MessagingResponse
 import os
+from datetime import datetime
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
@@ -98,18 +99,25 @@ async def responder_whatsapp(Body: str = Form(...)):
             texto_datos = mensaje.replace("!nuevo", "").strip()
             lista_datos = [p.strip() for p in texto_datos.split(",") if p.strip()]
 
-        if len(lista_datos) < 6:
-            respuesta = "❌ Formato incorrecto."
-        else:
-            try:
-                # Todo lo que está adentro del 'try' tiene otros 4 espacios más
-                nombre_p = lista_datos[0]
-                precio = float(lista_datos[1])
-                # ... resto del código ...
-                conn.commit()
-                respuesta = "✅ Éxito"
-            except Exception as e:
-                respuesta = f"❌ Error: {e}"
+            if len(lista_datos) < 6:
+                respuesta = "❌ Formato incorrecto."
+            else:
+                try:
+                    nombre_p = lista_datos[0]
+                    precio = float(lista_datos[1])
+                    fecha_vencimiento = datetime.strptime(lista_datos[2], "%Y-%m-%d").date()
+                    marca = lista_datos[3]
+                    stock = int(lista_datos[4])
+                    codigo_barra = lista_datos[5]
+
+                    query_insercion = f"""INSERT INTO producto (nombre_producto,precio,fecha_vencimiento,marca,stock,codigo) VALUES
+                                         %s,  %s,  %s, %s, %s, %s;"""
+                    cursor.execute(query_insercion,(nombre_p,precio,fecha_vencimiento,marca,stock,codigo_barra))
+                    conn.commit()
+                    respuesta = f¨el producto {nombre_p} fue creado con exito!¨
+                    
+                except Exception as e:
+                    respuesta = f"❌ Error: {e}"
         elif comando == "!actualizar":
             datos = mensaje.replace("!actualizar", "").strip()
             lista_datos = [p.strip() for p in datos.split(",") if p.strip()]
@@ -129,7 +137,6 @@ async def responder_whatsapp(Body: str = Form(...)):
                     respuesta = "❌ No encontré el producto para actualizar."
                 else:
                     id_prod = resultado["id"]
-                    # NOTA: Asegurate de que 'atributo' sea un nombre de columna válido
                     query_upd = f"UPDATE producto SET {atributo} = %s WHERE id = %s"
                     cursor.execute(query_upd, (valor, id_prod))
                     conn.commit()
@@ -157,6 +164,7 @@ async def responder_whatsapp(Body: str = Form(...)):
 
     resp_twilio.message(respuesta)
     return Response(content=str(resp_twilio), media_type="application/xml")
+
 
 
 
