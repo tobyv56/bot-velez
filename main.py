@@ -60,12 +60,13 @@ async def responder_whatsapp(Body: str = Form(...)):
                 producto = cursor.fetchone()
 
                 if producto:
-                    respuesta = (
+                   respuesta = (
                         "📦 *Detalles del Producto*\n"
                         f"🔹*Nombre:* {producto['nombre_producto']}\n"
                         f"🏷️ *Marca:* {producto['marca']}\n"
                         f"💰 *Precio:* ${producto['precio']}\n"
-                        f"🛒 *Stock:* {producto['stock']} unidades"
+                        f"🛒 *Stock:* {producto['stock']} unidades\n"
+                        f"🔄 *fecha_vencimiento {producto['fecha_venimiento']}\n"
                     )
                 else:
                     respuesta = f"❌ No encontré nada que tenga: *{consulta_limpia}*"
@@ -208,6 +209,7 @@ async def responder_whatsapp(Body: str = Form(...)):
         content=str(resp_twilio),
         media_type="application/xml"
     )
+
 
 
 
