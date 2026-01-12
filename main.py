@@ -152,12 +152,13 @@ async def responder_whatsapp(Body: str = Form(...)):
     return Response(content=str(resp_twilio), media_type="application/xml")
 
     def limpiar_texto(texto):
-    texto = texto.lower()
+        texto = texto.lower()
 
-    texto = unicodedata.normalize('NFD', texto) #Forma Descompuesta (nfd)
-    texto = ''.join(c for c in texto if unicodedata.category(c) != 'Mn') #Mark, Nonspacing(mn)
+        texto = unicodedata.normalize('NFD', texto) #Forma Descompuesta (nfd)
+        texto = ''.join(c for c in texto if unicodedata.category(c) != 'Mn') #Mark, Nonspacing(mn)
     
-    return texto
+        return texto
+
 
 
 
