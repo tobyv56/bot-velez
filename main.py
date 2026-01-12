@@ -19,6 +19,14 @@ async def inicio():
 async def favicon():
     return Response(status_code=204)
 
+def limpiar_texto(texto):
+        texto = texto.lower()
+
+        texto = unicodedata.normalize('NFD', texto) #Forma Descompuesta (nfd)
+        texto = ''.join(c for c in texto if unicodedata.category(c) != 'Mn') #Mark, Nonspacing(mn)
+    
+        return texto
+
 
 @app.post("/webhook")
 async def responder_whatsapp(Body: str = Form(...)):
@@ -151,13 +159,7 @@ async def responder_whatsapp(Body: str = Form(...)):
     resp_twilio.message(respuesta)
     return Response(content=str(resp_twilio), media_type="application/xml")
 
-    def limpiar_texto(texto):
-        texto = texto.lower()
-
-        texto = unicodedata.normalize('NFD', texto) #Forma Descompuesta (nfd)
-        texto = ''.join(c for c in texto if unicodedata.category(c) != 'Mn') #Mark, Nonspacing(mn)
     
-        return texto
 
 
 
