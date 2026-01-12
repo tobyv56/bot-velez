@@ -5,6 +5,7 @@ from psycopg2.extras import RealDictCursor
 from typing import Optional
 from twilio.twiml.messaging_response import MessagingResponse
 import os
+import unicodedata
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
@@ -35,7 +36,7 @@ async def responder_whatsapp(Body: str = Form(...)):
         cursor = conn.cursor()
 
         if comando == "!producto":
-            consulta_limpia = " ".join(partes[1:]).replace(",", " ").strip()
+            consulta_limpia = limpiar_texto(" ".join(partes[1:]).replace(",", " ")).strip()
             if not consulta_limpia:
                 respuesta = "❌ ¿Qué buscás? Ej: !producto quilmes lata"
             else:
@@ -150,8 +151,13 @@ async def responder_whatsapp(Body: str = Form(...)):
     resp_twilio.message(respuesta)
     return Response(content=str(resp_twilio), media_type="application/xml")
 
+    def limpiar_texto(texto):
+    texto = texto.lower()
 
-
+    texto = unicodedata.normalize('NFD', texto) #Forma Descompuesta (nfd)
+    texto = ''.join(c for c in texto if unicodedata.category(c) != 'Mn') #Mark, Nonspacing(mn)
+    
+    return texto
 
 
 
