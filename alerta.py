@@ -55,10 +55,10 @@ def revision_vencimiento():
 
 def mantener_vivo():
     try:
-        r = requests.get(RENDER_URL)
-        print(f"📡 Keep-alive exitoso (Status: {r.status_code})")
+        url_raiz = "https://bot-velez.onrender.com/" 
+        r = requests.get(url_raiz)
     except Exception as e:
-        print(f"❌ Falló el keep-alive: {e}")
+        print(f"❌ Falló el ping: {e}")
 
 schedule.every().day.at("10:00").do(revision_vencimiento)
 
@@ -71,6 +71,7 @@ mantener_vivo()
 while True:
     schedule.run_pending()
     time.sleep(60) 
+
 
 
 
