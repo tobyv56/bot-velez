@@ -107,46 +107,47 @@ async def responder_whatsapp(Body: str = Form(...)):
                     respuesta = "❌ Código no encontrado en la base de datos."
 
         elif comando == "!nuevo":
-        texto_datos = mensaje.replace("!nuevo", "").strip()
-        lista_datos = [p.strip() for p in texto_datos.split(",") if p.strip()]
+            texto_datos = mensaje.replace("!nuevo", "").strip()
+            lista_datos = [p.strip() for p in texto_datos.split(",") if p.strip()]
 
-        if len(lista_datos) < 6:
-            respuesta = "❌ Formato incorrecto. Usá: !nuevo nombre,precio,fecha,stock,marca,codigo de barra"
-        else:
-            try:
+            if len(lista_datos) < 6:
+                respuesta = "❌ Formato: !nuevo nombre, precio, fecha, marca, stock, codigo"
+            else:
+                try:
+                    conn.rollback()
 
-                conn.rollback()
+                    nombre_producto   = limpiar_texto(lista_datos[0])
+                    precio            = float(lista_datos[1])
+                    fecha_vencimiento = lista_datos[2] 
+                    marca             = limpiar_texto(lista_datos[3]) 
+                    stock             = int(lista_datos[4])           
+                    codigo_barra      = lista_datos[5]
 
-                nombre_producto = limpiar_texto(lista_datos[0])
-                precio = float(lista_datos[1].strip())
-                fecha_vencimiento = lista_datos[2].strip()
-                stock = int(lista_datos[3].strip())
-                marca = limpiar_texto(lista_datos[4])
-                codigo_barra = lista_datos[5].strip()
+                    insercion_producto = """
+                    INSERT INTO producto
+                    (nombre_producto, precio, fecha_vencimiento, stock, marca, codigo)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                    """
+                    
+                    cursor.execute(
+                        insercion_producto,
+                        (nombre_producto, precio, fecha_vencimiento, stock, marca, codigo_barra)
+                    )
+                    conn.commit()
 
-                insercion_producto = """
-                INSERT INTO producto
-                (nombre_producto, precio, fecha_vencimiento, stock, marca,codigo)
-                VALUES (%s, %s, %s, %s, %s,%s)
-                """
-                cursor.execute(
-                    insercion_producto,
-                    (nombre_producto, precio, fecha_vencimiento, stock, marca, codigo_barra)
-                )
-                conn.commit()
+                    respuesta = (
+                        "✅ *Producto creado con éxito*\n"
+                        f"🔹 Nombre: {nombre_producto.title()}\n"
+                        f"🔹 Marca: {marca.upper()}\n"
+                        f"🔹 Precio: ${precio}\n"
+                        f"🔹 Stock: {stock} unid.\n"
+                        f"🔹 Vencimiento: {fecha_vencimiento}\n"
+                        f"🔹 Código: {codigo_barra}"
+                    )
 
-                respuesta = (
-                    "✅ Producto creado\n"
-                    f"Nombre: {nombre_producto}\n"
-                    f"Precio: {precio}\n"
-                    f"Vencimiento: {fecha_vencimiento}\n"
-                    f"Stock: {stock}\n"
-                    f"Marca: {marca}\n"
-                    f"codigo_barra: {codigo_barra}\n"
-                )
-
-            except Exception as e:
-                respuesta = f"❌ Error BD: {str(e)}"
+                except Exception as e:
+                    conn.rollback()
+                    respuesta = f"❌ Error BD: {str(e)}"
 
         elif comando == "!actualizar":
             datos = mensaje.replace("!actualizar", "").strip()
@@ -188,6 +189,7 @@ async def responder_whatsapp(Body: str = Form(...)):
     return Response(content=str(resp_twilio), media_type="application/xml")
 
     
+
 
 
 
