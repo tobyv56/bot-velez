@@ -14,8 +14,11 @@ vencimiento a tiempo real
 ### tiene varios comando para interactuar con el bot como:
 
 !nuevo nombre_producto,marca,precio,stock,fecha_vencimiento,codigo_barra (crea un nuevo producto con sus atributos correspondientes)
+
 !actualizar nombre_producto, marca, atributo a cambiar, nuevo_valor (actualiza el producto al atributo el que quiera el usuario)
+
 !producto nombre_producto, marca (consulta el producto correspondiente devolviendole nombre_producto,marca,precio,stock,fecha_vencimiento)
+
 !productoc codigo_barra (es casi lo mismo que !producto pero se busca mediante el codigo de barra del producto "ideal para los empleados del supermercado para facilitar el trabajo")
 
 ## 🏗️ Arquitectura del Sistema
