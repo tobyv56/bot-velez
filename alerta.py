@@ -60,7 +60,7 @@ def mantener_vivo():
     except Exception as e:
         print(f"❌ Falló el ping: {e}")
 
-schedule.every().day.at("12:07").do(revision_vencimiento)
+schedule.every().day.at("15:13").do(revision_vencimiento)
 
 schedule.every(10).minutes.do(mantener_vivo)
 
@@ -71,6 +71,7 @@ mantener_vivo()
 while True:
     schedule.run_pending()
     time.sleep(60) 
+
 
 
 
