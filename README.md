@@ -3,13 +3,13 @@
 bot de whatsapp de gestion de productos de supermercados para simplificar la gestion de productos, control de precios y seguimientos de 
 vencimiento a tiempo real
 
-##🚀 Tecnologías Utilizadas
+## 🚀 Tecnologías Utilizadas
 
 -lenguaje = python                      -hosting =  twilio
 -framework web = fastapi
 -bdd = postgreSQL (neon) 
 
-##🛠️ Comandos Disponibles
+## 🛠️ Comandos Disponibles
 
 ### tiene varios comando para interactuar con el bot como:
 
@@ -18,7 +18,7 @@ vencimiento a tiempo real
 !producto nombre_producto, marca (consulta el producto correspondiente devolviendole nombre_producto,marca,precio,stock,fecha_vencimiento)
 !productoc codigo_barra (es casi lo mismo que !producto pero se busca mediante el codigo de barra del producto "ideal para los empleados del supermercado para facilitar el trabajo")
 
-##🏗️ Arquitectura del Sistema
+## 🏗️ Arquitectura del Sistema
 
 ### twilio esta conectado a un servidor en fastapi alojado en la nube haciendo peticiones y consultas a una bdd relacional
 
