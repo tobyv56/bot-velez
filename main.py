@@ -119,7 +119,7 @@ async def responder_whatsapp(Body: str = Form(...)):
 
                 nombre_producto = limpiar_texto(lista_datos[0])
                 precio = float(lista_datos[1].strip())
-                fecha_vencimiento = limpiar_texto(lista_datos[2])
+                fecha_vencimiento = lista_datos[2].strip()
                 stock = int(lista_datos[3].strip())
                 marca = limpiar_texto(lista_datos[4])
                 codigo_barra = lista_datos[5].strip()
@@ -188,6 +188,7 @@ async def responder_whatsapp(Body: str = Form(...)):
     return Response(content=str(resp_twilio), media_type="application/xml")
 
     
+
 
 
 
