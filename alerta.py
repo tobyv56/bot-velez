@@ -16,10 +16,12 @@ client = Client(TWILIO_SID, TWILIO_TOKEN)
 
 def revision_vencimiento():
     print("⏰ Iniciando revisión de vencimientos...")
+    conn = None 
     try:
         conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
         cursor = conn.cursor()
 
+        
         query_fecha_venc = """
             SELECT nombre_producto, fecha_vencimiento 
             FROM producto
@@ -31,15 +33,13 @@ def revision_vencimiento():
 
         productos_por_vencer = []
         for producto in query_fecha:
-            texto = f"• {producto['nombre_producto']} vence el {producto['fecha_vencimiento']}"
+            
+            fecha_str = producto['fecha_vencimiento'].strftime('%d/%m/%Y')
+            texto = f"• *{producto['nombre_producto'].title()}* (Vence: {fecha_str})"
             productos_por_vencer.append(texto)
 
-        
-        cursor.close()
-        conn.close()
-
         if productos_por_vencer:
-            print(f"📦 Se encontraron {len(productos_por_vencer)} productos. Enviando WhatsApp...")
+            print(f"📦 Enviando {len(productos_por_vencer)} productos...")
             respuesta_final = "📢 *Reporte de Vencimientos:*\n\n" + "\n".join(productos_por_vencer)
 
             client.messages.create(
@@ -48,29 +48,23 @@ def revision_vencimiento():
                 to='whatsapp:+5491158878312'   
             )
         else:
-            print("✅ No hay productos por vencer hoy.")
+            print("✅ No hay productos por vencer.")
 
     except Exception as e:
-        print(f"❌ Error en revision_vencimiento: {e}")
+        print(f"❌ Error: {e}")
+    finally:
+        if 'cursor' in locals(): cursor.close()
+        if 'conn' in locals() and conn: conn.close()
 
-def mantener_vivo():
-    try:
-        url_raiz = "https://bot-velez.onrender.com/" 
-        r = requests.get(url_raiz)
-    except Exception as e:
-        print(f"❌ Falló el ping: {e}")
 
-schedule.every().day.at("15:13").do(revision_vencimiento)
+schedule.every().day.at("15:17").do(revision_vencimiento)
 
 schedule.every(10).minutes.do(mantener_vivo)
 
-print("🚀 Script de alertas y keep-alive iniciado...")
-
-mantener_vivo()
-
 while True:
     schedule.run_pending()
-    time.sleep(60) 
+    time.sleep(1) 
+
 
 
 
