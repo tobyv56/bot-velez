@@ -5,9 +5,10 @@ vencimiento a tiempo real
 
 ## 🚀 Tecnologías Utilizadas
 
--lenguaje = python                      -hosting =  twilio
--framework web = fastapi
--bdd = postgreSQL (neon) 
+- lenguaje = python
+- hosting =  twilio
+- framework web = fastapi
+- bdd = postgreSQL (neon) 
 
 ## 🛠️ Comandos Disponibles
 
