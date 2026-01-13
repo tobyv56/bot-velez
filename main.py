@@ -59,9 +59,9 @@ async def responder_whatsapp(Body: str = Form(...)):
                 nombre_producto = lista_datos[0]
                 marca = lista_datos[1]
                 
-                query_base = "SELECT nombre_producto, stock, precio, fecha_vencimiento, marca FROM producto WHERE nombre_producto = %s OR marca = %s" # arma la query
+                query_base = "SELECT nombre_producto, stock, precio, fecha_vencimiento, marca FROM producto WHERE nombre_producto ILIKE %s OR marca ILIKE %s LIMIT 1" # arma la query
 
-                cursor.execute(query_base,(nombre_producto,palabras_marca))
+                cursor.execute(query_base,(f"%nombre_producto%",F"%marca%"))
                 producto = cursor.fetchone()
 
                 if producto:
@@ -165,6 +165,7 @@ async def responder_whatsapp(Body: str = Form(...)):
     return Response(content=str(resp_twilio), media_type="application/xml")
 
     
+
 
 
 
