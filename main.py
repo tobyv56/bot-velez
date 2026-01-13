@@ -116,7 +116,7 @@ async def responder_whatsapp(Body: str = Form(...)):
                     cod = lista_datos[5].strip()
 
                     query_ins = """
-                        INSERT INTO producto (nombre_producto, precio, fecha_vencimiento, stock, marca, codigo)
+                        INSERT INTO producto (nombre_producto, precio, fecha_vencimiento, stock, marca, codigo_barra)
                         VALUES (%s, %s, %s, %s, %s, %s)
                     """
                     cursor.execute(query_ins, (n_p, pre, ven, stk, mar, cod))
@@ -305,6 +305,7 @@ async def responder_whatsapp(Body: str = Form(...)):
     return Response(content=str(resp_twilio), media_type="application/xml")
 
     
+
 
 
 
