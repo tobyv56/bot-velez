@@ -25,5 +25,7 @@ vencimiento a tiempo real
 
 ### twilio esta conectado a un servidor en fastapi alojado en la nube haciendo peticiones y consultas a una bdd relacional
 
+## 🚧 Funcionalidades en Desarrollo (Roadmap)
+
 (actualmente sigue en desarrollo para diferentes funcionalidades como que te devuelva el bot los productos por vencer o un nuevo comando como !productob tipo_producto que me devuelve el producto mas barato)
 
