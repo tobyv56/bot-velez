@@ -43,7 +43,7 @@ async def responder_whatsapp(Body: str = Form(...)):
         conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
         cursor = conn.cursor()
 
-       if comando == "!producto":
+       iif comando == "!producto":
         
         consulta_limpia = " ".join(partes[1:]).strip()
 
@@ -56,24 +56,27 @@ async def responder_whatsapp(Body: str = Form(...)):
                 palabras = consulta_limpia.replace(",", " ").split() # formateo la cadena
                 lista_datos = [p.strip() for p in palabras.split(",") if p.strip()]
 
-                nombre_producto = lista_datos[0]
-                marca = lista_datos[1]
-                
-                query_base = "SELECT nombre_producto, stock, precio, fecha_vencimiento, marca FROM producto WHERE nombre_producto ILIKE %s OR marca ILIKE %s LIMIT 1" # arma la query
-
-                cursor.execute(query_base,(f"%nombre_producto%",F"%marca%"))
-                producto = cursor.fetchone()
-
-                if producto:
-                    respuesta = (
-                        "📦 *Detalles del Producto*\n"
-                        f"🔹*Nombre:* {producto['nombre_producto']}\n"
-                        f"🏷️ *Marca:* {producto['marca']}\n"
-                        f"💰 *Precio:* ${producto['precio']}\n"
-                        f"🛒 *Stock:* {producto['stock']} unidades"
-                    )
+                if len(lista_datos) < 2:
+                    respuesta = "⚠️ Formato: !producto nombre, marca (usá una coma para separar)"
                 else:
-                    respuesta = f"❌ No encontré nada que tenga: *{consulta_limpia}*"
+                    nombre_producto = limpiar_texto(lista_datos[0])
+                    marca = limpiar_texto(lista_datos[1])
+                
+                    query_base = "SELECT nombre_producto, stock, precio, fecha_vencimiento, marca FROM producto WHERE nombre_producto ILIKE %s OR marca ILIKE %s LIMIT 1" # arma la query
+
+                    cursor.execute(query_base,(f"%nombre_producto%",F"%marca%"))
+                    producto = cursor.fetchone()
+
+                    if producto:
+                        respuesta = (
+                            "📦 *Detalles del Producto*\n"
+                            f"🔹*Nombre:* {producto['nombre_producto']}\n"
+                            f"🏷️ *Marca:* {producto['marca']}\n"
+                            f"💰 *Precio:* ${producto['precio']}\n"
+                            f"🛒 *Stock:* {producto['stock']} unidades"
+                        )
+                    else:
+                        respuesta = f"❌ No encontré nada que tenga: *{consulta_limpia}*"
             
             except Exception as e:
                 conn.rollback()
@@ -165,6 +168,7 @@ async def responder_whatsapp(Body: str = Form(...)):
     return Response(content=str(resp_twilio), media_type="application/xml")
 
     
+
 
 
 
