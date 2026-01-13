@@ -1,4 +1,4 @@
-#🛒bot-velez
+# 🛒bot-velez
 
 bot de whatsapp de gestion de productos de supermercados para simplificar la gestion de productos, control de precios y seguimientos de 
 vencimiento a tiempo real
