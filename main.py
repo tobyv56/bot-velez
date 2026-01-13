@@ -241,7 +241,7 @@ async def responder_whatsapp(Body: str = Form(...)):
 
                     insercion_producto = """
                     INSERT INTO producto
-                    (nombre_producto, precio, fecha_vencimiento, stock, marca, codigo)
+                    (nombre_producto, precio, fecha_vencimiento, stock, marca, codigo_barra)
                     VALUES (%s, %s, %s, %s, %s, %s)
                     """
                     
@@ -305,6 +305,7 @@ async def responder_whatsapp(Body: str = Form(...)):
     return Response(content=str(resp_twilio), media_type="application/xml")
 
     
+
 
 
 
