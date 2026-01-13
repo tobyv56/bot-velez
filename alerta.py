@@ -14,6 +14,7 @@ RENDER_URL = "https://bot-velez.onrender.com"
 
 client = Client(TWILIO_SID, TWILIO_TOKEN)
 
+#ARREGLAR BUG NO MANDA MENSAJE
 def revision_vencimiento():
     print("⏰ Iniciando revisión de vencimientos...")
     conn = None 
@@ -64,6 +65,7 @@ schedule.every(10).minutes.do(mantener_vivo)
 while True:
     schedule.run_pending()
     time.sleep(1) 
+
 
 
 
